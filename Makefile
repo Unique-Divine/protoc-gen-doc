@@ -36,14 +36,24 @@ build: ## Build the main binary
 	@echo "$(CYAN)Building binary...$(CLEAR)"
 	@go build -o bin/protoc-gen-doc ./cmd/protoc-gen-doc
 
-build/examples: bin/protoc build tmp/googleapis examples/proto/*.proto examples/templates/*.tmpl ## Build example protos
+XMODULE=perp
+PROTOS_PATH=examples/proto/$(XMODULE)/**/*.proto
+
+build/examples: bin/protoc build tmp/googleapis $(PROTOS_PATH) examples/templates/*.tmpl ## Build example protos
 	@echo "$(CYAN)Making examples...$(CLEAR)"
-	@rm -f examples/doc/*
-	@$(EXAMPLE_CMD) --doc_opt=docbook,example.docbook:Ignore* examples/proto/*.proto
-	@$(EXAMPLE_CMD) --doc_opt=html,example.html:Ignore* examples/proto/*.proto
-	@$(EXAMPLE_CMD) --doc_opt=json,example.json:Ignore* examples/proto/*.proto
-	@$(EXAMPLE_CMD) --doc_opt=markdown,example.md:Ignore* examples/proto/*.proto
-	@$(EXAMPLE_CMD) --doc_opt=examples/templates/asciidoc.tmpl,example.txt:Ignore* examples/proto/*.proto
+	# @rm -f examples/doc/*
+	# @$(EXAMPLE_CMD) --doc_opt=docbook,example.docbook:Ignore* $(PROTOS_PATH)
+	# @$(EXAMPLE_CMD) --doc_opt=html,example.html:Ignore* $(PROTOS_PATH)
+	# @$(EXAMPLE_CMD) --doc_opt=json,example.json:Ignore* $(PROTOS_PATH)
+	@$(EXAMPLE_CMD) --doc_opt=markdown,$(XMODULE).md:Ignore* $(PROTOS_PATH)
+	XMODULE=vpool
+	PROTOS_PATH=examples/proto/$(XMODULE)/**/*.proto
+	@$(EXAMPLE_CMD) --doc_opt=markdown,$(XMODULE).md:Ignore* $(PROTOS_PATH)
+	@$(EXAMPLE_CMD) --doc_opt=markdown,$(XMODULE).md:Ignore* $(PROTOS_PATH)
+	@$(EXAMPLE_CMD) --doc_opt=markdown,$(XMODULE).md:Ignore* $(PROTOS_PATH)
+	@$(EXAMPLE_CMD) --doc_opt=markdown,$(XMODULE).md:Ignore* $(PROTOS_PATH)
+	@$(EXAMPLE_CMD) --doc_opt=markdown,$(XMODULE).md:Ignore* $(PROTOS_PATH)
+	# @$(EXAMPLE_CMD) --doc_opt=examples/templates/asciidoc.tmpl,example.txt:Ignore* $(PROTOS_PATH)
 
 ##@: Dev
 
